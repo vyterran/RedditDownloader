@@ -8,7 +8,7 @@
 	For the casual user this is the suggested way to launch RMD each time.
 	It will update some often-changing dependencies (YTDL mostly), which lets RMD keep updated with online content changes.
 """
-
+import custom_logger
 import subprocess
 import urllib.request
 import os
@@ -19,6 +19,8 @@ import platform
 import hashlib
 import traceback
 import multiprocessing
+from datetime import date, datetime
+
 
 dr = abspath(dirname(abspath(__file__)))
 sys.path.insert(0, join(dr, 'redditdownloader'))
@@ -170,13 +172,16 @@ if __name__ == '__main__':
 			traceback.print_exc()
 			print('\n\nUnable to download update! Please manually check the project: %s' % PROJECT_URL, file=sys.stderr)
 
+
 	# noinspection PyBroadException
 	try:
 		# Launch the main RMD python app.
 		import redditdownloader.__main__
+		import custom_sources
+		custom_sources.load_userlist()
 		redditdownloader.__main__.run()
 	except KeyboardInterrupt:
-		pass
+		print("Ended by KeyboardInterrupt")
 	except Exception:
 		traceback.print_exc()
 		print('\n\nCaught a fatal error running RMD. Cannot continue.')

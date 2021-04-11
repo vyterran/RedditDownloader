@@ -138,20 +138,29 @@ def frontpage_posts(order_by='new', limit=None, time='all'):
 
 
 @check_login
-def user_posts(username, find_submissions, find_comments):
+def user_posts(username, find_submissions, find_comments, deep_find_submissions=False, deep_find_comments=False): #vy
 	""" Generator for all the posts made by the given Redditor. """
 	try:
-		if find_comments:
-			for c in _reddit.redditor(username).comments.new():
+		if find_comments or deep_find_comments:
+			for c in _reddit.redditor(username).comments.new(limit=None):
 				yield RedditElement(c)
-		if find_submissions:
-			for c in _reddit.redditor(username).submissions.new():
+		if deep_find_comments:
+			for c in _reddit.redditor(username).comments.top(limit=None):
+				yield RedditElement(c)
+		if find_submissions or deep_find_submissions:
+			for c in _reddit.redditor(username).submissions.new(limit=None):
+				yield RedditElement(c)
+		if deep_find_submissions:
+			for c in _reddit.redditor(username).submissions.top(limit=None):
 				yield RedditElement(c)
 	except prawcore.exceptions.NotFound:
 		stringutil.error('Cannot locate comments or submissions for nonexistent user: %s' % username)
+		with open('user.nonexistent.log', 'a+', newline='\n') as f:
+			f.write(username + '\n')
 	except prawcore.exceptions.Forbidden:
 		stringutil.error('Cannot locate posts from a suspended user account: %s' % username)
-
+		with open('user.suspended.log', 'a+', newline='\n') as f:
+			f.write(username + '\n')
 
 @check_login
 def multi_reddit(username, reddit_name, order_by='new', limit=None, time='all'):

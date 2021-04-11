@@ -1,4 +1,6 @@
 import json
+from logging import debug
+import multiprocessing
 from processing.wrappers.rel_file import RelFile, SanitizedRelFile
 from processing.wrappers.queue_reader import QueueReader
 from multiprocessing import Array
@@ -36,6 +38,8 @@ class Progress:
 		value = json.dumps(value)
 		if len(value) > self.field_size:
 			value = json.dumps(("[META: Encoding Error: %s.%s]" % (self.__class__.__name__, field))[:self.field_size-2])
+		# if multiprocessing.current_process().name not in ['RedditElementLoader']:
+		# 	print("set [%s] to [%s]"%(field, value.encode(errors='replace')), debug=True)
 		self.fields[field].value = value.encode(errors='replace')
 		return True
 

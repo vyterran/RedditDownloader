@@ -2,6 +2,7 @@ import requests
 import mimetypes
 from static import settings
 from processing.handlers import HandlerResponse
+import multiprocessing
 
 
 allowed_mimetypes = ('image/', 'audio/', 'video/')

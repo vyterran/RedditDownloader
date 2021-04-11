@@ -40,7 +40,6 @@ args, unknown_args = parser.parse_known_args()
 
 direct_sources = []
 
-
 def run():
 	logging.basicConfig(level=logging.WARN, format='%(levelname)-5.5s [%(name)s] %(message)s', datefmt='%H:%M:%S')
 	su.print_color('green', "\r\n" +
@@ -71,7 +70,7 @@ def run():
 		sys.exit()
 
 	settings_file = args.settings or fs.find_file('settings.json')
-	_loaded = settings.load(settings_file)
+	_loaded = settings_file is not None# settings.load(settings_file)
 	for ua in unknown_args:
 		if '=' not in ua or '/comments/' in ua:
 			if '/comments/' in ua:

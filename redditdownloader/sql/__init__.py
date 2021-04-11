@@ -12,7 +12,7 @@ from alembic import command
 from alembic import script
 from alembic.config import Config
 from alembic.runtime import migration
-from sqlalchemy import or_
+from sqlalchemy import or_, not_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
@@ -241,3 +241,14 @@ def encode_safe(obj, stringify=False, indent=None):
 	if stringify:
 		obj = json.dumps(obj, indent=indent)
 	return obj
+
+def get_last_seen_posts(username, limit, before_utc=0):
+	out = []
+	for p in _Session.query(Post).filter(Post.author==username).order_by(Post.created_utc.desc()):
+		if before_utc is not None and before_utc > 0 and p.created_utc > before_utc:
+			continue # don't include posts newer than before_utc
+		if all(u.processed for u in p.urls):
+			out.append(p)
+			if limit is not None and len(out) >= limit:
+				break
+	return out

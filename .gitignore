@@ -114,3 +114,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+userlist
+.DS_Store
+custom_sources.py

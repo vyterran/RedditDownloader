@@ -3,6 +3,7 @@ from static import stringutil
 import re
 import json
 import html
+from datetime import datetime
 from ttp import ttp
 
 url_parser = ttp.Parser()
@@ -210,3 +211,6 @@ class RedditElement(object):
 
 	def __str__(self):
 		return json.dumps(self.__dict__)
+
+	def strf_created_utc(self, format="%y/%m/%d %H:%M:%S"):
+		return datetime.fromtimestamp(self.created_utc).strftime(format)

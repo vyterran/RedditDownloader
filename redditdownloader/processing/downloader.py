@@ -1,3 +1,4 @@
+from logging import debug
 import multiprocessing
 import sql
 from static import settings
@@ -30,10 +31,11 @@ class Downloader(multiprocessing.Process):
 		self._session = sql.session()
 		self.progress.clear(status="Starting up...", running=True)
 		failed = False
-
+		
 		for nxt_id in self._reader:
 			try:
 				url = self._session.query(sql.URL).filter(sql.URL.id == nxt_id).first()
+				#print("downloading %s to %s"%(url.address, url.file.path), debug=True)
 				if not url:
 					raise Exception("Unknown URL ID provided: (%s}" % nxt_id)
 
@@ -50,6 +52,7 @@ class Downloader(multiprocessing.Process):
 				is_album_parent = False
 
 				with self._db_lock:
+					#print("updating %s, %s, %s"%(url.failed, url.address, url.file.path), debug=True)
 					if resp.album_urls:
 						if url.album_id:
 							resp.album_urls = []  # Ignore nested Albums to avoid recursion.

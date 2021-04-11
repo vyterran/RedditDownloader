@@ -1,12 +1,13 @@
+from urllib.parse import urlparse
 from static import stringutil
 import traceback
 
 
 def sorted_list():
 	""" A list of all available static Handlers, pre-sorted by order. """
-	from processing.handlers import github, imgur, generic_newspaper, reddit_handler, ytdl, tumblr, direct_link, gfycat
+	from processing.handlers import disabled_link, github, imgur, generic_newspaper, reddit_handler, ytdl, tumblr, direct_link, gfycat
 	return sorted([
-		generic_newspaper, github, imgur, reddit_handler, ytdl, tumblr, direct_link, gfycat
+		disabled_link, generic_newspaper, github, imgur, reddit_handler, ytdl, tumblr, direct_link, gfycat
 	], key=lambda x: x.order, reverse=False)
 
 
@@ -29,9 +30,10 @@ def handle(handler_task, progress_obj):
 	"""
 	Pass the given HandlerTask into the handler list, and try to find one that can download the given file.
 	"""
+	res = urlparse(handler_task.url)
 	for h in sorted_list():
 		try:
-			progress_obj.set_handler(h.tag)
+			progress_obj.set_handler("%s on %s"%(h.tag, res.netloc))
 			result = h.handle(task=handler_task, progress=progress_obj)
 			if result:
 				return result

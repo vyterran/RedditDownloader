@@ -38,6 +38,7 @@ class RMDController(threading.Thread):
 		[t.join() for t in self._all_processes]
 
 	def stop(self):
+		print("stoping...", debug=True)
 		self.loader.get_stop_event().set()
 		for d in self._downloaders:
 			d.terminate()
@@ -59,13 +60,14 @@ class RMDController(threading.Thread):
 		Waits for the "refresh delay" configured in the settings, or exits early if processing finished before then.
 		:return: True if the delay was fully awaited, or False if processing has completed.
 		"""
+		print("wait_refresh_rate, _stop_event is %s"%self.loader.get_stop_event().is_set(), debug=True)
 		if not self.loader.get_stop_event().is_set():
 			self.loader.get_stop_event().wait(settings.get("threading.display_refresh_rate"))
 			return True
 		return False
 
 	def _create_downloaders(self):
-		dls = []  # type: [Downloader]
+		dls = []
 		for i in range(settings.get('threading.concurrent_downloads')):
 			tp = Downloader(
 				reader=self.loader.get_reader(),

@@ -3,7 +3,6 @@
 """
 import filters as filters
 
-
 class Source:
 	"""
 	Source objects have simply:
@@ -114,3 +113,17 @@ class Source:
 
 	def __repr__(self):
 		return "(Source: %s :: %s)" % (self.type, self.get_config_summary())
+
+	@staticmethod
+	def is_new_post(reddit_element, last_seen):
+		if last_seen is None or len(last_seen) == 0:
+			return True
+		if reddit_element.created_utc > max(p.created_utc for p in last_seen):
+			return True
+		if reddit_element.created_utc < min(p.created_utc for p in last_seen):
+			return False
+		for i,s in enumerate(last_seen):
+			if reddit_element.id != s.reddit_id:
+				return i # not new but keep looking
+		print("!Missed older post: (%s) [%s] %s %s"%(i, reddit_element.strf_created_utc(), reddit_element.author, reddit_element.id))
+		return True

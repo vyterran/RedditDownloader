@@ -1,5 +1,7 @@
 import queue
 
+from multiprocessing.util import debug
+
 
 class QueueReader:
 	"""
@@ -26,14 +28,20 @@ class QueueReader:
 				return self._queue.get(block=True, timeout=.1)
 			except queue.Empty:
 				if self._stop_event.is_set():
+					#print("_stop_event is %s in QueueReader which has %s items"%(self._stop_event.is_set(), self._queue.qsize()), debug=True)
 					return None
 				if not hang:
+					#print("_stop_event is %s in QueueReader which has %s items"%(self._stop_event.is_set(), self._queue.qsize()), debug=True)
 					raise
+		#print("_stop_event is %s in QueueReader which has %s items"%(self._stop_event.is_set(), self._queue.qsize()), debug=True)
 		return None
 
 	def __iter__(self):
 		while True:
+			#print("getting from QueueReader which has %s items"%self._queue.qsize(), debug=True)
 			n = self.next(hang=True)
 			if n is None:
+				#print("no more items from QueueReader which has %s items"%self._queue.qsize(), debug=True)
 				break
+			#print("got item from QueueReader which has %s items"%self._queue.qsize(), debug=True)
 			yield n

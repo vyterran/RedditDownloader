@@ -9,8 +9,8 @@ class App extends React.Component {
 			// [Element, Name, enabled_while_running]
 			[<Home />, 'Home', true],
 			[<Sources />, 'Sources', false],
-			[<Settings />, 'Settings', false],
-			[<Browser />, 'Browser', true]
+			[<Settings />, 'Settings', false]
+			//[<Browser />, 'Browser', true]
 		];
 		for(let i=0; i < this.pages.length; i++)
 			if(this.pages[i][1].toLowerCase() === hash.toLowerCase())
