@@ -212,5 +212,5 @@ class RedditElement(object):
 	def __str__(self):
 		return json.dumps(self.__dict__)
 
-	def strf_created_utc(self, format="%y/%m/%d %H:%M:%S"):
+	def strf_created_utc(self, format="%y-%m-%d %H:%M:%S"):
 		return datetime.fromtimestamp(self.created_utc).strftime(format)

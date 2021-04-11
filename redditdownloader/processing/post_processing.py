@@ -121,7 +121,7 @@ class Deduplicator(multiprocessing.Process):
 					if new_hash == last_printed:
 						print("Found another duplicate:", new_hash, "::\n", f, debug=True)
 					elif len(matches) > 6:
-						printed = matches[3:] + ["... %s total matches ..."%len(matches)] + matches[:-3]
+						printed = matches[:3] + ["... %s total matches ..."%len(matches)] + matches[-3:]
 						print("Found duplicate files: ", new_hash,"::\n", '\n'.join(str(m) for m in [f]+printed), debug=True)
 					else:
 						print("Found duplicate files: ", new_hash,"::\n", '\n'.join(str(m) for m in [f]+matches), debug=True)

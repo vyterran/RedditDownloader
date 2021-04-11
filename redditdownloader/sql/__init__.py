@@ -247,7 +247,7 @@ def get_last_seen_posts(username, limit, before_utc=0):
 	for p in _Session.query(Post).filter(Post.author==username).order_by(Post.created_utc.desc()):
 		if before_utc is not None and before_utc > 0 and p.created_utc > before_utc:
 			continue # don't include posts newer than before_utc
-		if all(u.processed for u in p.urls):
+		if p.urls and all(u.processed for u in p.urls):
 			out.append(p)
 			if limit is not None and len(out) >= limit:
 				break
