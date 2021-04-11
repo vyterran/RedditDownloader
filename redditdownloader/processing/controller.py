@@ -2,6 +2,7 @@ import re
 import sys
 import threading
 import sql
+import importlib
 from static import settings
 from static import stringutil as su
 from processing.redditloader import RedditLoader
@@ -9,7 +10,7 @@ from processing.downloader import Downloader
 from processing.post_processing import Deduplicator
 from processing.wrappers import ProgressManifest
 from multiprocessing import RLock
-
+import custom_sources
 
 class RMDController(threading.Thread):
 	def __init__(self, source_patterns=None):
@@ -79,6 +80,8 @@ class RMDController(threading.Thread):
 		return dls
 
 	def load_sources(self):  # !cover
+		importlib.reload(custom_sources)
+		custom_sources.load_userlist()
 		sources = []
 		settings_sources = settings.get_sources()
 		if self.sources is None:

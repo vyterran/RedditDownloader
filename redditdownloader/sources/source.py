@@ -122,8 +122,12 @@ class Source:
 			return True
 		if reddit_element.created_utc < min(p.created_utc for p in last_seen):
 			return False
+		match_i = None
 		for i,s in enumerate(last_seen):
-			if reddit_element.id != s.reddit_id:
-				return i # not new but keep looking
-		print("!Missed older post: (%s) [%s] %s %s"%(i, reddit_element.strf_created_utc(), reddit_element.author, reddit_element.id))
-		return True
+			if reddit_element.id == s.reddit_id:
+				match_i = i
+				break 
+		if match_i is None:
+			print("! Missed older post: (%s) [%s] %s %s"%(i, reddit_element.strf_created_utc(), reddit_element.author, reddit_element.id))
+			return True
+		return match_i # not new but keep looking
