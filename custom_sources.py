@@ -64,15 +64,15 @@ def load_userlist():
         with open('userlist', 'r') as f:
             for u in f:
                 lnum += 1
-                if lnum <= -1 or lnum > 2:
+                if lnum <= -1 or lnum > 10000:
                    continue
                 u = u.split('#')[0].strip()
                 if not u:
                     continue
                 if u in newest_utc:
                     check_utc = newest_utc[u]
-                    check_last = 200
-                    #check_utc = min(last_post.created_utc, datetime(2021, 3, 31).timestamp())
+                    check_last = 50
+                    check_utc = min(check_utc, datetime(2021, 3, 31).timestamp())
                     source_dicts.append(user_source(u, alias='p%03d %s'%(lnum,u), check_last=check_last, check_utc=check_utc, ps=True))
                     source_dicts.append(user_source(u, alias='r%03d %s'%(lnum,u), check_last=check_last, check_utc=check_utc, ps=False))
                 elif u:

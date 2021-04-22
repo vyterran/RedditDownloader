@@ -1,3 +1,4 @@
+from logging import debug
 import eel
 import sys
 import os
@@ -85,12 +86,12 @@ def start(web_dir):
 
 def _websocket_close(page, old_websockets):
 	global stopped
-	print('A WebUI just closed. Checking for other connections... (%s)[%s]' % (page, len(old_websockets)))
+	print('A WebUI just closed. Checking for other connections... (%s)[%s]' % (page, len(old_websockets)), debug=True)
 	for i in range(40):
 		eel.sleep(.1)
 		# noinspection PyProtectedMember
 		if len(eel._websockets) > 0:
-			print('Open connections still exist. Not stopping UI server.')
+			print('Open connections still exist. Not stopping UI server.', debug=True)
 			return
 	if not settings.get('interface.keep_open'):
 		print('WebUI keep_open is disabled, and all open clients have closed. Exiting.')
