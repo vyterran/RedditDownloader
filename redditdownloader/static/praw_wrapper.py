@@ -138,20 +138,21 @@ def frontpage_posts(order_by='new', limit=None, time='all'):
 
 
 @check_login
-def user_posts(username, find_submissions, find_comments, deep_find_submissions=False, deep_find_comments=False): #vy
+def user_posts(username, find_submissions, find_comments, find_limit=None, deep_find_submissions=False, deep_find_comments=False): #vy
 	""" Generator for all the posts made by the given Redditor. """
 	try:
+		limit = find_limit if (find_limit is not None and find_limit > 0) else None
 		if find_comments or deep_find_comments:
-			for c in _reddit.redditor(username).comments.new(limit=None):
+			for c in _reddit.redditor(username).comments.new(limit=limit):
 				yield RedditElement(c)
 		if deep_find_comments:
-			for c in _reddit.redditor(username).comments.top(limit=None):
+			for c in _reddit.redditor(username).comments.top(limit=limit):
 				yield RedditElement(c)
 		if find_submissions or deep_find_submissions:
-			for c in _reddit.redditor(username).submissions.new(limit=None):
+			for c in _reddit.redditor(username).submissions.new(limit=limit):
 				yield RedditElement(c)
 		if deep_find_submissions:
-			for c in _reddit.redditor(username).submissions.top(limit=None):
+			for c in _reddit.redditor(username).submissions.top(limit=limit):
 				yield RedditElement(c)
 	except prawcore.exceptions.NotFound:
 		stringutil.error('Cannot locate comments or submissions for nonexistent user: %s' % username)

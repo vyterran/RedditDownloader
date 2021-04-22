@@ -20,6 +20,7 @@ class UserPostsSource(source.Source):
 				username=self.data['user'],
 				find_submissions=self.data['scan_submissions'],
 				find_comments=self.data['scan_comments'],
+				find_limit=self.data['scan_limit'],
 				deep_find_submissions=self.data['deep_scan_submissions'],
 				deep_find_comments=self.data['deep_scan_comments']):
 			if check_last is not None:
@@ -38,6 +39,7 @@ class UserPostsSource(source.Source):
 		yield Setting('user', '', etype='str', desc='Target username:')
 		yield Setting('scan_comments', False, etype='bool', desc='Scan their comments?')
 		yield Setting('scan_submissions', False, etype='bool', desc='Scan their submissions?')
+		yield Setting('scan_limit', -1, etype='int', desc='Scan limit.')
 		yield Setting('deep_scan_comments', False, etype='bool', desc='Scan their comments?')
 		yield Setting('deep_scan_submissions', False, etype='bool', desc='Scan their submissions?')
 		yield Setting('check_last_seen_posts', 0, etype='int', desc='Stop scanning after encountering saved posts.')
