@@ -45,6 +45,9 @@ def pssrc(u, **kwargs):
     ps.from_obj(user_source(u, **kwargs))
     return ps
 
+def get_urls(post):
+    return [x.split('?',1)[0] for x in post.get_urls()]
+
 def userlist_file():
     lnum = 0
     with open('userlist', 'r') as f:
@@ -145,9 +148,14 @@ if __name__ == '__main__':
     import pickle, re
     from psaw import PushshiftAPI
     ps = PushshiftAPI()
-    #ms = sources.UpvotedSaved()
-    with open('../ms_posts.pkl', 'rb') as f:
-        ms_posts = pickle.load(f)
+    ms = sources.UpvotedSaved()
+    ## %time ms_posts = list(ms)
+    ## pickle.dump(ms_posts, open(datetime.now().strftime("%y.%m.%d.ms_posts.pkl"), 'wb'))
+    # with open('../ms_posts.pkl', 'rb') as f:
+    #     ms_posts = pickle.load(f)
+    ## maybe = [p for p in new if not re.search(sub_patt, p.subreddit, re.I) and p.subreddit != 'IRLgirls' and p.over_18 and p.author not in list(userlist_file())]
+    ## print('\n'.join("{} {:<20} {:<20} {:<8} {:<32} {}".format(strf_utc(p.created_utc), p.subreddit, p.author, p.id, p.title[:30], p.url) for p in del_ps.values()))
+    ## print('\n'.join("{} {:<20} {:<20} {:<8} {:<32} \n   {}\n".format(strf_utc(p.created_utc), p.subreddit, p.author, p.id, p.title[:30], '\n   '.join(p.get_urls())) for p in definate))
     userlist = list(userlist_file())
     # nu = [p.author for p in ms_posts if p.author not in userlist]
     # ns = [p.subreddit for p in ms_posts if p.author not in userlist]
